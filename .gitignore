@@ -1,11 +1,27 @@
-# Default ignored files
-/shelf/
-/.idea/workspace.xml
-# Editor-based HTTP Client requests
-/httpRequests/
-# Datasource local storage ignored files
-/dataSources/
-/dataSources.local.xml
-.idea/
-*.iml
-target/
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# IDE-specific files
+/.idea/
+/*.iml
+/.vscode/
+/*.classpath
+/.project
+/.settings/
+
+# Build directories
+/target/
+/build/
+/out/
+
+# Dependency directory
+/.mvn/
+/.gradle/
+/node_modules/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
