@@ -1,13 +1,11 @@
 package com.my_sample_project.BudgetApp.controller;
 
-import com.my_sample_project.BudgetApp.model.Category;
+import com.my_sample_project.BudgetApp.dto.category.CategoryDTO;
 import com.my_sample_project.BudgetApp.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,8 +22,17 @@ public class CategoryController {
 
     // Endpoint to get categories for the authenticated user
     @GetMapping
-    public ResponseEntity<List<Category>> getUserCategories(@RequestHeader("Authorization") String authHeader) {
-        List<Category> categories = categoryService.getCategoriesByUserToken(authHeader);
+    public ResponseEntity<List<CategoryDTO>> getUserCategories(@RequestHeader("Authorization") String authHeader) {
+        List<CategoryDTO> categories = categoryService.getCategoriesByUserToken(authHeader);
         return ResponseEntity.ok(categories);
+    }
+
+    // Endpoint to save a new category
+    @PostMapping
+    public ResponseEntity<CategoryDTO> saveCategory(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestBody CategoryDTO categoryDTO) {
+        CategoryDTO savedCategory = categoryService.saveCategory(authHeader, categoryDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedCategory);
     }
 }
