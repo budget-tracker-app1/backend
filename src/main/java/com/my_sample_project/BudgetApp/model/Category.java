@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "categories")
+@Table(name = "categories",
+    uniqueConstraints = @UniqueConstraint(columnNames = {"name", "type"})
+)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,8 +21,9 @@ public class Category {
     @Column(name = "name", length = 255, nullable = false)
     private String name;
 
-    @Column(name = "type", columnDefinition = "ENUM('income', 'expense')", nullable = false)
-    private String type;
+    @Column(name = "type", columnDefinition = "ENUM('ACCOUNT', 'INCOME', 'EXPENSE')", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private CategoryType type;
 
     @Column(name = "user_id", nullable = false)
     private Long userId;
