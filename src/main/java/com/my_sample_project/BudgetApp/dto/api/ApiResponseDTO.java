@@ -1,15 +1,3 @@
-//package com.my_sample_project.BudgetApp.dto.api;
-//
-//import lombok.AllArgsConstructor;
-//import lombok.Data;
-//
-//@Data
-//@AllArgsConstructor
-//public class ApiResponseDTO {
-//    private String message;
-//    private int status;
-//}
-
 package com.my_sample_project.BudgetApp.dto.api;
 
 import java.util.Map;
