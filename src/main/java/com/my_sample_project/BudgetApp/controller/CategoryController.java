@@ -35,4 +35,14 @@ public class CategoryController {
         CategoryDTO savedCategory = categoryService.saveCategory(authHeader, categoryDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCategory);
     }
+
+    // Endpoint to update an existing category
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryDTO> updateCategory(
+            @RequestHeader("Authorization") String authHeader,
+            @PathVariable("id") Integer id,
+            @RequestBody CategoryDTO categoryDTO) {
+        CategoryDTO updatedCategory = categoryService.updateCategory(authHeader, id, categoryDTO);
+        return ResponseEntity.ok(updatedCategory);
+    }
 }
