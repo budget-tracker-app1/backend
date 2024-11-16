@@ -85,6 +85,16 @@ public class JwtUtil {
         return extractClaim(token, Claims::getSubject);
     }
 
+    // Helper method to extract userId from the Authorization token
+    public Long extractUserIdFromToken(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new IllegalArgumentException("Invalid Authorization header format.");
+        }
+        String token = authHeader.substring(7);
+
+        return extractUserId(token);  // Extract userId from token
+    }
+
     // Extract expiration date
     public Date extractExpiration(String token) {
         Claims claims = Jwts.parser()
