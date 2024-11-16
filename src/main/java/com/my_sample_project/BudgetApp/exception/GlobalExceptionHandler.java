@@ -9,6 +9,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(CategoryAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponseDTO> handleCategoryAlreadyExistsException(CategoryAlreadyExistsException ex) {
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO(
+                ex.getMessage(),
+                ex.getStatusCode(),
+                "Category Already Exists Error"
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(ex.getStatusCode()));
+    }
+
     @ExceptionHandler(CategoryValidationException.class)
     public ResponseEntity<ErrorResponseDTO> handleCategoryValidationException(CategoryValidationException ex) {
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
@@ -17,6 +27,16 @@ public class GlobalExceptionHandler {
                 "Category Validation Error"
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(ex.getStatusCode()));
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponseDTO> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO(
+                ex.getMessage(),
+                ex.getStatusCode(),
+                "Resource Not Found"
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)
