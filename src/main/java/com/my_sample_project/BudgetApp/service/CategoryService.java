@@ -6,7 +6,9 @@ import com.my_sample_project.BudgetApp.exception.CategoryValidationException;
 import com.my_sample_project.BudgetApp.exception.ResourceNotFoundException;
 import com.my_sample_project.BudgetApp.model.Category;
 import com.my_sample_project.BudgetApp.model.CategoryType;
+import com.my_sample_project.BudgetApp.model.User;
 import com.my_sample_project.BudgetApp.repository.CategoryRepository;
+import com.my_sample_project.BudgetApp.repository.UserRepository;
 import com.my_sample_project.BudgetApp.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,11 +21,13 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
 
     @Autowired
-    public CategoryService(CategoryRepository categoryRepository, JwtUtil jwtUtil) {
+    public CategoryService(CategoryRepository categoryRepository, JwtUtil jwtUtil, UserRepository userRepository) {
         this.categoryRepository = categoryRepository;
         this.jwtUtil = jwtUtil;
+        this.userRepository = userRepository;
     }
 
     // Fetch categories based on the user ID from the Bearer token
@@ -41,7 +45,8 @@ public class CategoryService {
                         projection.getName(),
                         projection.getType(),
                         projection.getColor(),
-                        projection.getUserId()
+                        projection.getUserId(),
+                        projection.getBalance()
                 ))
                 .collect(Collectors.toList());
     }
@@ -59,6 +64,9 @@ public class CategoryService {
         try {
             Category category;
 
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+
             if (id != null) {
                 // Update existing category
                 category = categoryRepository.findById(id)
@@ -75,7 +83,7 @@ public class CategoryService {
             category.setType(categoryDTO.getType());
 
             category.setColor(categoryDTO.getColor());
-            category.setUserId(userId);
+            category.setUser(user);
 
             // Save or update the category in the database
             category = categoryRepository.save(category);
@@ -85,7 +93,8 @@ public class CategoryService {
                     category.getName(),
                     category.getType(),
                     category.getColor(),
-                    category.getUserId()
+                    user.getId(),
+                    category.getBalance()
             );
         } catch (Exception e) {
             throw new RuntimeException("An error occurred", e);

@@ -8,4 +8,5 @@ public interface CategoryProjection {
     CategoryType getType();
     String getColor();
     Long getUserId();
+    Double getBalance();
 }

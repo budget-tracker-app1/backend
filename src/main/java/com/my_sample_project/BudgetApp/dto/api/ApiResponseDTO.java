@@ -5,7 +5,7 @@ import java.util.Map;
 public class ApiResponseDTO {
     private boolean success;
     private String message;
-    private Map<String, Object> data; // Add this field
+    private Map<String, Object> data;
 
     // Constructor with data
     public ApiResponseDTO(boolean success, String message, Map<String, Object> data) {
