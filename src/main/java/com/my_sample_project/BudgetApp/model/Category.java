@@ -25,21 +25,30 @@ public class Category {
     @Enumerated(EnumType.STRING)
     private CategoryType type;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    private User user;
 
     @Column(name = "color", length = 32)
     private String color;
 
-//     Custom validation logic
+    @Column(name = "balance", nullable = true)
+    private Double balance;
+
+    // Custom validation logic
     @PrePersist
     @PreUpdate
-    private void validateColor() {
-        if ("expense".equals(type) && (color == null || color.isEmpty())) {
+    private void validateColorAndAmount() {
+        if (CategoryType.EXPENSE.equals(type) && (color == null || color.isEmpty())) {
             throw new CategoryValidationException(
-                "Color is required for 'expense' type categories.",
-                400
+                    "Color is required for 'expense' type categories.",
+                    400
             );
+        }
+
+        // Set amount to 0.00 for ACCOUNT type categories if it's not already set
+        if (CategoryType.ACCOUNT.equals(type) && balance == null) {
+            balance = 0.00;
         }
     }
 }
