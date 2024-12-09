@@ -6,8 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/v1/transactions/income")
+@RequestMapping("/api/v1/transactions")
 public class TransactionController {
 
     private final TransactionService transactionService;
@@ -18,12 +20,22 @@ public class TransactionController {
 
     @PostMapping
     public ResponseEntity<TransactionDTO> createTransaction(
-            @RequestHeader("Authorization") String authHeader,  // Extract the Authorization header
+            @RequestHeader("Authorization") String authHeader,
             @RequestBody TransactionDTO transactionDTO) {
 
-        // Save the transaction and return the result
+        // Save the transaction using the service method
         TransactionDTO savedTransaction = transactionService.saveTransaction(authHeader, transactionDTO);
 
         return new ResponseEntity<>(savedTransaction, HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<TransactionDTO>> getAllTransactions(
+            @RequestHeader("Authorization") String authHeader) {
+
+        // Fetch all transactions using the service method
+        List<TransactionDTO> transactions = transactionService.getAllTransactions(authHeader);
+
+        return new ResponseEntity<>(transactions, HttpStatus.OK);
     }
 }
