@@ -40,11 +40,15 @@ public class Transaction {
     )
     private Category category;
 
-    @Column(name = "account", nullable = false)
-    private String account;
+    @Column(name = "left_category", nullable = false)
+    private String leftCategory;
 
-    @Column(name = "income", nullable = false)
-    private String income;
+    @Column(name = "right_category", nullable = false)
+    private String rightCategory;
+
+    @Column(name = "type", columnDefinition = "ENUM('INCOME', 'EXPENSE', 'TRANSFER')", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TransactionType type;
 
     @Column(name = "amount", nullable = false)
     private Double amount;
@@ -55,4 +59,8 @@ public class Transaction {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @Column(name = "status", columnDefinition = "ENUM('SUCCESS', 'FAILED')")
+    @Enumerated(EnumType.STRING)
+    private TransactionStatus status;
 }
