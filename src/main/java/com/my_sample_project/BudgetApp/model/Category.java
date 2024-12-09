@@ -41,7 +41,7 @@ public class Category {
     private void validateColorAndAmount() {
         if (CategoryType.EXPENSE.equals(type) && (color == null || color.isEmpty())) {
             throw new CategoryValidationException(
-                    "Color is required for 'expense' type categories.",
+                    "Color is required for 'EXPENSE' type categories.",
                     400
             );
         }
