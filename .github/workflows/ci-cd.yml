@@ -36,11 +36,10 @@ jobs:
       - name: Build with Maven
         run: ./mvnw clean install -DskipTests
 
-      # Deploy the application (you may need to adjust this to match Render's deployment setup)
+      # Deploy the application to Render
       - name: Deploy to Render
         run: |
-          # Assuming you have a Render CLI installed or a Render-specific deployment setup
-          # Deploy with Render CLI
+          # Install Render CLI
           curl -sSL https://render.com/downloads/render-cli.sh | bash
-          render login --apiKey ${{ secrets.RENDER_API_KEY }}
-          render deploy --service your-service-name
+          echo "$RENDER_API_KEY" | render login --apiKey
+          render deploy --service budget-tracker-backend
