@@ -3,10 +3,10 @@ name: Build and Deploy Spring Boot Application
 on:
   push:
     branches:
-      - main  # This triggers the workflow when you push to the main branch
+      - main  # Trigger on push to the main branch
   pull_request:
     branches:
-      - main  # Trigger when a PR is created to the main branch
+      - main  # Trigger on PR to the main branch
 
 jobs:
   build:
@@ -37,11 +37,15 @@ jobs:
       - name: Build with Maven
         run: ./mvnw clean install -DskipTests
 
-      # Deploy the application to Render
+      # Install Render CLI
       - name: Install Render CLI
         run: |
           curl -sSL https://github.com/renderinc/render-cli/releases/download/v0.0.5/render-cli-linux-amd64 -o render-cli
           chmod +x render-cli
-          mv render-cli /usr/local/bin/render
+          sudo mv render-cli /usr/local/bin/render
+
+      # Deploy the application to Render
+      - name: Deploy to Render
+        run: |
           echo "$RENDER_API_KEY" | render login --apiKey
           render deploy --service budget-tracker-backend
