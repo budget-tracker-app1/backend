@@ -40,9 +40,9 @@ jobs:
       # Install Render CLI
       - name: Install Render CLI
         run: |
-          curl -sSL https://github.com/renderinc/render-cli/releases/download/v0.0.5/render-cli-linux-amd64 -o render-cli
-          chmod +x render-cli
-          sudo mv render-cli /usr/local/bin/render
+          curl -LO https://github.com/renderinc/render-cli/releases/download/v0.0.5/render-cli-linux-amd64
+          chmod +x render-cli-linux-amd64
+          sudo mv render-cli-linux-amd64 /usr/local/bin/render
           render --version
 
       # Deploy the application to Render
