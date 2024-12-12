@@ -17,11 +17,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Set up JDK 17 (or another version you are using)
-      - name: Set up JDK 17
+      # Set up JDK 21
+      - name: Set up JDK 21
         uses: actions/setup-java@v2
         with:
-          java-version: '17'
+          java-version: '21'
+          distribution: 'adoptopenjdk'
 
       # Cache Maven dependencies to speed up builds
       - name: Cache Maven dependencies
