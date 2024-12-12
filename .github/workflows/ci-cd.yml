@@ -41,11 +41,11 @@ jobs:
       - name: Install Render CLI
         run: |
           # Download the Render CLI binary for Linux with the -L flag to follow redirects
-          curl -LO https://github.com/renderinc/render-cli/releases/download/v0.0.5/render-cli-linux-amd64
+          curl -fsSL https://github.com/renderinc/render-cli/releases/download/v0.0.5/render-cli-linux-amd64 -o render-cli-linux-amd64
 
           # Check if the file is a valid binary
           if file render-cli-linux-amd64 | grep -q 'ASCII text'; then
-            echo "Downloaded file is not a valid binary. It might be an error page or redirect."  
+            echo "Downloaded file is not a valid binary. It might be an error page or redirect."
             exit 1
           fi
 
@@ -60,6 +60,8 @@ jobs:
 
       # Deploy the application to Render
       - name: Deploy to Render
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}  # Use GitHub Secrets to store your Render API key
         run: |
           # Login to Render using the API key stored in the environment variable
           echo "$RENDER_API_KEY" | render login --apiKey
