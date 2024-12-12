@@ -18,7 +18,6 @@
 /out/
 
 # Dependency directory
-/.mvn/
 /.gradle/
 /node_modules/
 
