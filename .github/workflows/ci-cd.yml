@@ -43,7 +43,7 @@ jobs:
           # Download the Render CLI binary for Linux
           curl -LO https://github.com/renderinc/render-cli/releases/download/v0.0.5/render-cli-linux-amd64
 
-          # Check if the downloaded file is valid binary or HTML (i.e., not an error page)
+          # Verify that the downloaded file is a valid binary
           if file render-cli-linux-amd64 | grep -q 'ASCII text'; then
             echo "Downloaded file is not a valid binary. Exiting..."  # Print error if file is not binary
             exit 1  # Exit the workflow with error code
@@ -52,9 +52,11 @@ jobs:
           # Make the Render CLI binary executable
           chmod +x render-cli-linux-amd64
 
-          # Move the binary to the appropriate location for execution and verify the installation
+          # Move the binary to the appropriate location for execution
           sudo mv render-cli-linux-amd64 /usr/local/bin/render
-          render --version  # Check if Render CLI is installed correctly
+
+          # Check the Render CLI version to verify successful installation
+          render --version
 
       # Deploy the application to Render
       - name: Deploy to Render
