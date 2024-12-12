@@ -40,6 +40,8 @@ jobs:
       # Deploy the application to Render
       - name: Install Render CLI
         run: |
-          curl -sSL https://render.com/downloads/render-cli.sh | bash
+          curl -sSL https://github.com/renderinc/render-cli/releases/download/v0.0.5/render-cli-linux-amd64 -o render-cli
+          chmod +x render-cli
+          mv render-cli /usr/local/bin/render
           echo "$RENDER_API_KEY" | render login --apiKey
           render deploy --service budget-tracker-backend
