@@ -37,18 +37,8 @@ jobs:
       - name: Build with Maven
         run: ./mvnw clean install -DskipTests  # Use Maven wrapper to clean, build, and skip tests
 
-      # Install Render CLI to deploy the app
-      - name: Install Render CLI
-        run: |
-          npm install -g @render/cli
-
-        # Deploy the application to Render
+      # Deploy the application to Render using GitHub API
       - name: Deploy to Render
-        env:
-          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}  # Use GitHub Secrets to store your Render API key
         run: |
-          # Login to Render using the API key stored in the environment variable
-          echo "$RENDER_API_KEY" | render login --apiKey
-          
-          # Deploy the application to the specified Render service (e.g., "budget-tracker-backend")
-          render deploy --service budget-tracker-backend
+          curl -X POST https://api.render.com/deploy -H "Authorization: Bearer $RENDER_API_KEY" \
+          -d '{"service":"budget-tracker-backend"}'
