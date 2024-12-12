@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '21'
-          distribution: 'adoptopenjdk'
+          distribution: 'temurin'
 
       # Cache Maven dependencies to speed up builds
       - name: Cache Maven dependencies
