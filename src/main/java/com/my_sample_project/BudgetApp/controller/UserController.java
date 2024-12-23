@@ -115,15 +115,6 @@ public class UserController {
 
             // Validate the token
             if (jwtUtil.validateToken(refreshToken, username)) {
-                // Extract the expiration date of the refresh token
-                Date expirationDate = jwtUtil.extractExpiration(refreshToken);
-
-                // Check if the refresh token is expired
-                if (expirationDate.before(new Date())) {
-                    // Return a 401 response if expired
-                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                            .body(Map.of("error", "Refresh token expired"));
-                }
 
                 // Generate a new access token
                 String newAccessToken = jwtUtil.generateAccessToken(username, userId);
@@ -137,6 +128,10 @@ public class UserController {
             System.err.println("JWT Token expired: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("error", "Refresh token expired"));
+        } catch (io.jsonwebtoken.JwtException e) {
+            System.err.println("Invalid JWT Token: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid refresh token"));
         } catch (Exception e) {
             // Catch all other exceptions
             System.err.println("Error refreshing token: " + e.getMessage());

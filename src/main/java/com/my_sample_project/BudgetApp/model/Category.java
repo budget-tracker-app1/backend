@@ -6,7 +6,7 @@ import lombok.*;
 
 @Entity
 @Table(name = "categories",
-    uniqueConstraints = @UniqueConstraint(columnNames = {"name", "type"})
+    uniqueConstraints = @UniqueConstraint(columnNames = {"name", "type", "user_id"})
 )
 @Data
 @NoArgsConstructor

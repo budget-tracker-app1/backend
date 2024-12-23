@@ -12,9 +12,12 @@ import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 import java.util.function.Function;
+import java.util.logging.Logger;
 
 @Component
 public class JwtUtil {
+
+    private static final Logger LOGGER = Logger.getLogger(JwtUtil.class.getName());
 
     private final Key SECRET_KEY;
     private static final long JWT_EXPIRATION = 1000 * 60 * 30; // 30 minutes expiration
@@ -33,7 +36,7 @@ public class JwtUtil {
             .claim("user_id", userId)
             .setIssuedAt(new Date())
             .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION))
-            .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+            .signWith(SECRET_KEY)
             .compact();
     }
 
@@ -59,18 +62,14 @@ public class JwtUtil {
             return extractedUsername.equals(username) && !isTokenExpired(token);
         } catch (Exception e) {
             // Handle any parsing errors
-            System.err.println("JWT validation error: " + e.getMessage());
+            LOGGER.severe("JWT validation error: " + e.getMessage());
             return false;
         }
     }
 
     // Extracts the user ID from the JWT token from the "user_id" claim
     public Long extractUserId(String token) {
-        Claims claims = Jwts.parser()
-            .setSigningKey(SECRET_KEY)
-            .parseClaimsJws(token)
-            .getBody();
-
+        Claims claims = extractAllClaims(token);
         Object userId = claims.get("user_id");
 
         if (userId == null) {
@@ -91,17 +90,12 @@ public class JwtUtil {
             throw new IllegalArgumentException("Invalid Authorization header format.");
         }
         String token = authHeader.substring(7);
-
         return extractUserId(token);  // Extract userId from token
     }
 
     // Extract expiration date
     public Date extractExpiration(String token) {
-        Claims claims = Jwts.parser()
-            .setSigningKey(SECRET_KEY)
-            .parseClaimsJws(token)
-            .getBody();
-        return claims.getExpiration();
+        return extractClaim(token, Claims::getExpiration);
     }
 
     // Check if the token has expired
@@ -115,7 +109,7 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
 
-    // Extract all claims using the Jwts.parser() method
+    // Extract all claims using JwtParser
     public Claims extractAllClaims(String token) {
         try {
             if (token == null || token.isEmpty() || !token.contains(".")) {
@@ -124,17 +118,16 @@ public class JwtUtil {
 
             JwtParser parser = Jwts.parserBuilder()
                     .setSigningKey(SECRET_KEY)
-                    .setAllowedClockSkewSeconds(5)  // Set the allowed clock skew to 5 seconds
+                    .setAllowedClockSkewSeconds(5) // Set the allowed clock skew to 5 seconds
                     .build();
 
-            Claims claims = parser.parseClaimsJws(token).getBody();
-            return claims;
+            return parser.parseClaimsJws(token).getBody();
 
         } catch (io.jsonwebtoken.ExpiredJwtException e) {
-            System.err.println("JWT Token expired: " + e.getMessage());
-            throw new RuntimeException("JWT Token expired", e);
+            LOGGER.severe("JWT Token expired: " + e.getMessage());
+            throw e;
         } catch (Exception e) {
-            System.err.println("Error parsing JWT: " + e.getMessage());
+            LOGGER.severe("Error parsing JWT: " + e.getMessage());
             throw new RuntimeException("Invalid JWT token", e);
         }
     }
