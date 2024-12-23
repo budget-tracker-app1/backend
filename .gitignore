@@ -24,3 +24,8 @@
 # OS-specific files
 .DS_Store
 Thumbs.db
+ca.pem
+local_dump.sql
+pom.xml.versionsBackup
+render-cli-linux-amd64
+src/main/resources/application.properties
