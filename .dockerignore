@@ -1,0 +1,7 @@
+target/*.jar.original
+target/generated-sources/
+*.iml
+.idea/
+.git/
+.gitignore
+logs/

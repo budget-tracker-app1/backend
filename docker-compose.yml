@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: 0000
+      MYSQL_DATABASE: budget_tracker_db
+    ports:
+      - "3306:3306"
+    networks:
+      - budget-tracker-network
+
+  spring-boot-app:
+    build: .
+    container_name: budget-tracker-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-container:3306/budget_tracker_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 0000
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    networks:
+      - budget-tracker-network
+
+networks:
+  budget-tracker-network:
+    driver: bridge
