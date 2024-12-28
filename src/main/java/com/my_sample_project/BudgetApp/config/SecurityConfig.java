@@ -59,7 +59,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:3000",
                 "http://127.0.0.1:3000",
-                "https://frontend-xyz.onrender.com"
+                "https://frontend-gjap.onrender.com/"
         ));
         configuration.setAllowCredentials(true);
         configuration.addAllowedHeader("*");
