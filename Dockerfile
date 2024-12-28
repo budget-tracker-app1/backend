@@ -12,10 +12,6 @@ COPY src/ src/
 # Build the application using Maven inside the container
 RUN ./mvnw clean package -DskipTests
 
-# (Optional) Copy the SSL certificate into the container if needed
-# If you don't want the certificate file, just comment this line
-COPY src/main/resources/certs/ca.pem /app/certs/ca.pem
-
 # Expose port 8080 to access the application
 EXPOSE 8080
 
