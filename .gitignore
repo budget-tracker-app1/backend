@@ -31,4 +31,4 @@ local_dump.sql
 pom.xml.versionsBackup
 render-cli-linux-amd64
 ca.pem
-src/main/resources/application.properties
+#src/main/resources/application.properties
