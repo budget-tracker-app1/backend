@@ -9,17 +9,15 @@ COPY .mvn/ .mvn/
 COPY mvnw pom.xml ./
 COPY src/ src/
 
-# Build the application using Maven
-RUN ./mvnw package -DskipTests
-
-# Copy the built JAR file to the working directory
-COPY target/BudgetApp-0.0.1-SNAPSHOT.jar app.jar
+# Build the application using Maven inside the container
+RUN ./mvnw clean package -DskipTests
 
 # (Optional) Copy the SSL certificate into the container if needed
+# If you don't want the certificate file, just comment this line
 COPY src/main/resources/certs/ca.pem /app/certs/ca.pem
 
 # Expose port 8080 to access the application
 EXPOSE 8080
 
 # Run the JAR file
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "target/BudgetApp-0.0.1-SNAPSHOT.jar"]
