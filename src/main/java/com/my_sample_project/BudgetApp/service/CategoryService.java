@@ -106,6 +106,11 @@ public class CategoryService {
         // Extract userId from token
         Long userId = jwtUtil.extractUserIdFromToken(authHeader);
 
+        // Manually check if name is empty
+        if (categoryDTO.getName().isEmpty()) {
+            throw new CategoryValidationException("Category name cannot be empty", 400);
+        }
+
         // Validate name and type uniqueness for the user
         validateNameAndType(categoryDTO.getName(), categoryDTO.getType(), userId);
 
@@ -117,6 +122,14 @@ public class CategoryService {
     public CategoryDTO updateCategory(String authHeader, Integer id, CategoryDTO categoryDTO) {
         // Extract userId from token
         Long userId = jwtUtil.extractUserIdFromToken(authHeader);
+
+        // Manually check if name is empty
+        if (categoryDTO.getName().isEmpty()) {
+            throw new CategoryValidationException("Category name cannot be empty", 400);
+        }
+
+        // Validate name and type uniqueness for the user
+        validateNameAndType(categoryDTO.getName(), categoryDTO.getType(), userId);
 
         // Use helper method to update the category
         return saveOrUpdateCategory(userId, id, categoryDTO);
