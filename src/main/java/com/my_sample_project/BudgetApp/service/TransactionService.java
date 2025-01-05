@@ -3,6 +3,7 @@ package com.my_sample_project.BudgetApp.service;
 import com.my_sample_project.BudgetApp.dto.account.AccountAmountUpdateDTO;
 import com.my_sample_project.BudgetApp.dto.category.CategoryDTO;
 import com.my_sample_project.BudgetApp.dto.transaction.TransactionDTO;
+import com.my_sample_project.BudgetApp.exception.CategoryValidationException;
 import com.my_sample_project.BudgetApp.exception.InsufficientFundsException;
 import com.my_sample_project.BudgetApp.model.*;
 import com.my_sample_project.BudgetApp.repository.CategoryRepository;
@@ -71,23 +72,41 @@ public class TransactionService {
     private void validateTransaction(Long userId, TransactionDTO transactionDTO) {
         System.out.println("Validating accounts...");
 
+        if (transactionDTO.getLeftCategory() == null || transactionDTO.getLeftCategory().isEmpty()) {
+            throw new CategoryValidationException("Left Category cannot be null or empty.", 400);
+        }
+
+        if (transactionDTO.getRightCategory() == null || transactionDTO.getRightCategory().isEmpty()) {
+            throw new CategoryValidationException("Right Category cannot be null or empty.", 400);
+        }
+
+        // Validate amount
+        if (transactionDTO.getAmount() == null || transactionDTO.getAmount() <= 0) {
+            throw new CategoryValidationException("Transaction amount must be greater than zero.", 400);
+        }
+
         // Validate left account
-        if (!categoryRepository.existsByNameAndTypeAndUserId(
+        boolean leftAccountExists = categoryRepository.existsByNameAndTypeAndUserId(
                 transactionDTO.getLeftCategory(),
                 CategoryType.ACCOUNT,
-                userId)) {
-            throw new RuntimeException("The left account '" + transactionDTO.getLeftCategory() +
-                    "' does not exist or is not of type 'ACCOUNT' for the user.");
+                userId);
+
+        if (!leftAccountExists) {
+            throw new CategoryValidationException("The left account '" + transactionDTO.getLeftCategory() +
+                    "' does not exist or is not of type 'ACCOUNT' for the user.", 404);
         }
 
         // Validate right account for TRANSFER
-        if (transactionDTO.getType() == TransactionType.TRANSFER &&
-                !categoryRepository.existsByNameAndTypeAndUserId(
-                        transactionDTO.getRightCategory(),
-                        CategoryType.ACCOUNT,
-                        userId)) {
-            throw new RuntimeException("The right account '" + transactionDTO.getRightCategory() +
-                    "' does not exist or is not of type 'ACCOUNT' for the user.");
+        if (transactionDTO.getType() == TransactionType.TRANSFER) {
+            boolean rightAccountExists = categoryRepository.existsByNameAndTypeAndUserId(
+                    transactionDTO.getRightCategory(),
+                    CategoryType.ACCOUNT,
+                    userId);
+
+            if (!rightAccountExists) {
+                throw new CategoryValidationException("The right account '" + transactionDTO.getRightCategory() +
+                        "' does not exist or is not of type 'ACCOUNT' for the user.", 404);
+            }
         }
 
         System.out.println("Account validation completed.");
