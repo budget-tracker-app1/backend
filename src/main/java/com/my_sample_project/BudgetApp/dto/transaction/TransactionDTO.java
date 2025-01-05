@@ -2,6 +2,8 @@ package com.my_sample_project.BudgetApp.dto.transaction;
 
 import com.my_sample_project.BudgetApp.model.TransactionStatus;
 import com.my_sample_project.BudgetApp.model.TransactionType;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +15,13 @@ public class TransactionDTO {
 
     private Integer id;
     private Long user_id;
+
+    @NotNull(message = "Left category cannot be null")
+    @Size(min = 1, message = "Left category cannot be empty")
     private String leftCategory;
+
+    @NotNull(message = "Right category cannot be null")
+    @Size(min = 1, message = "Right category cannot be empty")
     private String rightCategory;
     private TransactionType type;
     private Double amount;
