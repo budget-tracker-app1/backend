@@ -23,8 +23,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1")
-//@CrossOrigin(origins = "http://localhost:3000")
-@CrossOrigin(origins = "https://frontend-url.onrender.com")
+@CrossOrigin(origins = "https://budget-tracker-demo.onrender.com/")
 public class UserController {
 
     @Autowired
